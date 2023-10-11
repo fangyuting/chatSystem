@@ -14,13 +14,23 @@
         name: 'App',
         data() {
             return {};
+        },
+        sockets: {
+            disconnect() {
+                alert('Socket 断开');
+            },
+
+            connect() {
+                console.log('Socket 连接成功');
+                // this.OnImageSocket();
+            },
+            linkSuccess(val) {
+                console.log('linkSuccess :>>', val);
+            }
+        },
+        mounted() {
+            this.$socket.emit('hello', '服务器你收到了吗? halohalo');
         }
-        // data() {
-        //     return {
-        //         include: ['Layout'],
-        //         exclude: ['Login', 'NotFound']
-        //     };
-        // }
     };
 </script>
 

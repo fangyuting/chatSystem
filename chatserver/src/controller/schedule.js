@@ -4,13 +4,14 @@ const { Schedule } = require('../models/schedule');
 // 添加日程
 const addEvent = async (req, res) => {
     const { title, start, end, cssClass, account } = req.body;
-    console.log(req.body);
+    // console.log('1');
+    // console.log(req.body);
     try {
         const newSchedule = await Schedule.create({
             name: account,
             title: title,
-            start: startMoment,
-            end: endMoment,
+            start: start,
+            end: end,
             cssClass: cssClass
         });
         return res.json({
@@ -31,13 +32,14 @@ const addEvent = async (req, res) => {
 // 获取日程
 const getEvent = async (req, res) => {
     let { account } = req.query;
-    console.log(account);
+    // console.log('account', account);
 
     const events = await Schedule.findAll({
         where: {
             name: account
         }
     });
+    // console.log(events);
     return res.json({
         status: 200,
         data: events,

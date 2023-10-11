@@ -4,7 +4,7 @@
         <!-- <router-link> 的 to 属性指定的地址决定了哪个组件会在 <router-view> 中渲染 -->
         <div class="aside">
             <div class="avatar">
-                <router-link to="/chat/chatHome">
+                <router-link to="/chat/chatHome" class="img">
                     <img src="../../static/image/touxiang.jpg" alt="" />
                 </router-link>
                 <span>{{ userInfo.name }}</span>
@@ -97,7 +97,13 @@
                     duration: 2000
                 });
             }
-        }
+        },
+        mounted() {}
+        // sockets: {
+        //     connect: function () {
+        //         console.log('socket connected', this.$socket.id);
+        //     }
+        // }
     };
 </script>
 
@@ -117,6 +123,9 @@
             .avatar {
                 font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
                 padding-top: 0.9375rem;
+                .img {
+                    display: block;
+                }
                 img {
                     width: 3.125rem;
                     height: 3.125rem;

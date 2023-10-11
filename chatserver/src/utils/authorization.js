@@ -5,7 +5,7 @@ const { SECRET_KEY, WHITE_LIST } = require('./config');
 module.exports = {
     // 生成 token
     createToken(user) {
-        console.log('我来了');
+        // console.log('我来了');
         return jwt.sign({ user }, SECRET_KEY, { expiresIn: '12h' });
     },
     checkToken(req, res, next) {
@@ -18,7 +18,7 @@ module.exports = {
             } else {
                 if (token) {
                     const userId = jwt.verify(token, SECRET_KEY).user;
-                    console.log('userId', userId);
+                    // console.log('userId', userId);
                     if (!userId) {
                         return res.json({
                             status: 1006,

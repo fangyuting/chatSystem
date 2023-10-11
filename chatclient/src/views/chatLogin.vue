@@ -78,6 +78,7 @@
 
     export default {
         name: 'Login',
+
         data() {
             // 一定要放上面 不然报错
             const validateRepassword = async (rule, value, callback) => {
@@ -174,7 +175,7 @@
                 this.cvCoding = true;
                 api.user.getCVCode().then((res) => {
                     const { data, status, timestamp } = res;
-                    console.log('cvCoderes', res);
+                    // console.log('cvCoderes', res);
                     // console.log('data.data', data);
                     this.cvCode = data;
                     // console.log(this.cvCode);
@@ -273,12 +274,16 @@
                                     //     'account',
                                     //     this.currentInfo.account
                                     // );
+
                                     this.$store.dispatch('user/LOGIN', data);
+
                                     const redirect = this.$router.currentRoute.query.redirect;
                                     // console.log(redirect);
                                     const next = redirect ? redirect : '/chat';
+
                                     // 路由导航到其他页面
                                     this.$router.replace(next);
+                                    this.$socket.emit('login', this.currentInfo.account);
 
                                     // 清空数据
                                     this.currentInfo.account = '';
@@ -286,6 +291,11 @@
                                     this.currentInfo.repassword = '';
                                     this.currentInfo.cvCode = '';
                                     this.currentInfo.cvCodeTimestamp = '';
+                                    // this.$socket.connect();
+                                    // this.$socket.on('connect', () => {
+                                    //     console.log('Socket.IO连接成功！');
+                                    //     this.$socket.emit('login', this.currentInfo.account);
+                                    // });
                                 }
                             });
                         } else {
@@ -358,7 +368,6 @@
                                     });
                                     // this.currentInfo.cvCode = '';
                                     console.log('currentInfo', this.currentInfo);
-
                                     this.toggleState();
                                     console.log('currentInfo', this.currentInfo);
                                     this.currentInfo.account = data.name;

@@ -40,7 +40,7 @@ requests.interceptors.request.use(
     (config) => {
         // 检查是否存在登录 token
         const token = getCookie();
-        console.log('查看有没有token', token);
+        // console.log('查看有没有token', token);
         if (token) {
             // 将token添加到请求头中,以实现身份验证
             config.headers.Authorization = token;
@@ -59,7 +59,7 @@ requests.interceptors.request.use(
 // 响应拦截器: 拦截服务器响应，并在收到响应后执行一些操作
 requests.interceptors.response.use(
     (res) => {
-        console.log('看看现在什么状态', res.data.status);
+        // console.log('看看现在什么状态', res.data.status);
         // 处理不同状态码的响应
         if (res.data.status === 1000) {
             setCookie(res.data.token);

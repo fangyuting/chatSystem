@@ -71,6 +71,7 @@
     // import { formatTime } from '@/utils';
     import { FullCalendar } from 'vue-fullcalendar';
     import api from '../api/index';
+    import { Message } from 'element-ui';
 
     export default {
         name: 'schedule',
@@ -121,7 +122,7 @@
         methods: {
             getEvent() {
                 const account = JSON.parse(window.localStorage.getItem('userInfo')).name;
-                console.log(account);
+                console.log('account', account);
                 const params = {
                     account: account
                 };
@@ -136,7 +137,7 @@
             AddEvent() {
                 this.$refs.eventForm.validate((valid) => {
                     if (valid) {
-                        const account = window.localStorage.getItem('account');
+                        const account = JSON.parse(window.localStorage.getItem('userInfo')).name;
                         this.eventForm.account = account;
 
                         // console.log(account);
@@ -157,9 +158,16 @@
                         this.eventForm.start = new Date(newStartTimestamp);
                         this.eventForm.end = new Date(newEndTimestamp);
 
-                        console.log(this.eventForm);
+                        console.log('eventForm', this.eventForm);
                         api.schedule.addEvent(this.eventForm).then((res) => {
-                            console.log(res);
+                            console.log('res', res);
+                            if (res.status == 200) {
+                                Message({
+                                    message: '日程添加成功',
+                                    type: 'success'
+                                });
+                                this.getEvent();
+                            }
                         });
 
                         this.eventForm.title = '';
@@ -169,8 +177,6 @@
                         this.eventForm.account = '';
 
                         this.dialogFormVisible = false;
-
-                        this.getEvent();
                     } else {
                         console.log('表单校验失败');
                     }
@@ -266,9 +272,9 @@
             }
         }
 
-        /deep/ .full-calendar-body .dates .dates-events .events-week .events-day {
+        /* /deep/ .full-calendar-body .dates .dates-events .events-week .events-day {
             min-height: 120px;
-        }
+        } */
         /deep/ .el-dialog {
             display: flex;
             flex-direction: column;

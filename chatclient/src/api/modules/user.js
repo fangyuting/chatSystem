@@ -22,15 +22,14 @@ export default {
     updateUserInfo(data) {
         return request.post(`${API}/user/updateUserInfo`, data);
     },
+    // 更新用户密码
     updateUserPwd(data) {
         return request.post(`${API}/user/updateUserPwd`, data);
+    },
+    preFetchUser(data) {
+        let { optionType, value, pageSize, pagenum } = data;
+        return request.get(
+            `${API}/user/preFetchUser?optionType=${optionType}&value=${value}&pageSize=${pageSize}&pagenum=${pagenum}`
+        );
     }
-
-    // getCVCode(data){
-    //     return request({
-    //         url:`${API}/user/getcvcode`,
-    //         method:'GET',
-    //         data
-    //     })
-    // }
 };

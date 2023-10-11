@@ -1,10 +1,9 @@
 <template>
-    <div class="SystemNews">SystemNews</div>
+    <div class="SystemNews"></div>
 </template>
 
 <script>
-export default {};
+    export default {};
 </script>
 
-<style>
-</style>
+<style></style>

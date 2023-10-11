@@ -39,8 +39,8 @@ const login = async (req, res) => {
                 name: account
             }
         });
-        console.log('existingUser');
-        console.log(existingUser);
+        // console.log('existingUser');
+        // console.log(existingUser);
         // const userAccount = result.filter((user) => user.name === account);
         let pass = md5(password); // 加密密码
 
@@ -69,9 +69,9 @@ const login = async (req, res) => {
                 msg: '用户账户已被注销'
             });
         }
-        console.log(nowTimeStamp);
-        console.log(cvCodeTimestamp);
-        console.log(nowTimeStamp - cvCodeTimestamp);
+        // console.log(nowTimeStamp);
+        // console.log(cvCodeTimestamp);
+        // console.log(nowTimeStamp - cvCodeTimestamp);
         if (nowTimeStamp - cvCodeTimestamp > 60000) {
             console.log('验证码过期');
             return res.json({
@@ -97,7 +97,7 @@ const login = async (req, res) => {
         ).then((up) => {
             console.log('upSuccess', up);
         });
-        console.log('最新生成的token', token);
+        // console.log('最新生成的token', token);
         return res.json({
             status: 1000,
             data: existingUser,
@@ -111,7 +111,7 @@ const login = async (req, res) => {
 
 // 注册
 const register = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     // 请求数据
     const { account, password, repassword, cvCodeTimestamp, cvCode } = req.body;
 
@@ -178,7 +178,7 @@ const register = async (req, res) => {
 
 // 获取用户信息
 const getUserInfo = async (req, res) => {
-    console.log(req.query);
+    // console.log(req.query);
     let { UserId } = req.query;
     try {
         const UserInfo = await User.findOne({
@@ -186,7 +186,7 @@ const getUserInfo = async (req, res) => {
                 id: UserId
             }
         });
-        console.log(UserInfo);
+        // console.log(UserInfo);
         if (UserInfo) {
             return res.json({
                 status: 200,
@@ -221,7 +221,7 @@ const getUserInfo = async (req, res) => {
  *
  */
 const updateUserInfo = async (req, res) => {
-    console.log(req.body);
+    // console.log(req.body);
     /**
      * field：更新的项，比如昵称、性别等
      * [field] 变成键
@@ -264,7 +264,7 @@ const updateUserInfo = async (req, res) => {
         console.log('updateSuccess', up);
     });
     const data = await User.findOne({ where: { id: userId } });
-    console.log(data);
+    // console.log(data);
     return res.json({
         status: 200,
         data: data,
@@ -274,7 +274,7 @@ const updateUserInfo = async (req, res) => {
 
 const updateUserPwd = async (req, res) => {
     const { oldPwd, newPwd, userId } = req.body;
-    console.log(req.body);
+    // console.log(req.body);
     if (parseToken(req.headers.authorization) == null) {
         return res.json({
             status: 1006,
@@ -325,11 +325,65 @@ const updateUserPwd = async (req, res) => {
         }
     }
 };
+
+const preFetchUser = async (req, res) => {
+    try {
+        const { optionType, value, pageSize = 6, pagenum = 1 } = req.query;
+        const limitValue = parseInt(pageSize, 10);
+        // console.log(req.query);
+
+        if (parseToken(req.headers.authorization) == null) {
+            return res.json({
+                status: 1006,
+                data: [],
+                msg: 'Token 已过期'
+            });
+        } else if (parseToken(req.headers.authorization) == 'errToken') {
+            return res.json({
+                status: 1006,
+                data: [],
+                msg: 'Token 无效'
+            });
+        }
+        // offset 从哪里开始找 pagenum=1 第一页 从0开始找 (pagenum-1)*pageSize=0
+        // limit 限制每页显示的数据
+        const existingUser = await User.findAndCountAll({
+            where: {
+                [optionType]: value
+            },
+            offset: (pagenum - 1) * limitValue,
+            limit: limitValue
+        });
+        // console.log(existingUser);
+        if (existingUser) {
+            res.json({
+                status: 200,
+                data: existingUser,
+                pagination: {
+                    currentPage: pagenum,
+                    pageSize: pageSize,
+
+                    // 一共有多少条记录
+                    total: existingUser.count
+                },
+                msg: 'fetch User success'
+            });
+        }
+    } catch (error) {
+        console.error(error);
+        res.json({
+            status: 500,
+            data: [],
+            msg: 'Internal Server Error'
+        });
+    }
+};
 module.exports = {
     login,
     getCVCode,
     register,
     getUserInfo,
     updateUserInfo,
-    updateUserPwd
+    updateUserPwd,
+    preFetchUser
 };

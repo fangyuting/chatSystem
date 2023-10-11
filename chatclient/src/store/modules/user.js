@@ -20,7 +20,8 @@ const actions = {
 // 用于操作数据(state)
 const mutations = {
     login(state, data) {
-        (state.isLogin = true), (state.userInfo = data);
+        state.isLogin = true;
+        state.userInfo = data;
         let dataString = JSON.stringify(data);
         window.localStorage.setItem('userInfo', dataString);
         window.sessionStorage.setItem('isLogin', true);
