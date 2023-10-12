@@ -19,10 +19,6 @@
     "element-ui": "^2.15.14",
     "js-cookie": "^3.0.5",
     "nprogress": "^0.2.0",
-<<<<<<< HEAD
-=======
-    "socket.io": "^4.7.2",
->>>>>>> 90ab46bbe2168972eb1cbb82c8d7b86fa6af53fb
     "socket.io-client": "^4.7.2",
     "vue": "^2.6.14",
     "vue-fullcalendar": "^1.0.9",
