@@ -3,7 +3,7 @@ const cvCode = require('../utils/cvCode').cvCode;
 const md5 = require('./../utils').md5;
 let verificationCode = ''; // 验证码
 const nowTimeStamp = Date.now();
-const { User } = require('../models/user');
+const { Users } = require('../models/users');
 const { createToken, parseToken } = require('../utils/authorization');
 
 // 获取验证码
@@ -34,7 +34,7 @@ const login = async (req, res) => {
     */
 
     try {
-        const existingUser = await User.findOne({
+        const existingUser = await Users.findOne({
             where: {
                 name: account
             }
@@ -91,7 +91,7 @@ const login = async (req, res) => {
         }
         const token = createToken(existingUser.id);
         // 更新上次登录时间
-        await User.update(
+        await Users.update(
             { lastLoginTime: Date.now() + 8 * 3600000 },
             { where: { name: account } }
         ).then((up) => {
@@ -122,7 +122,7 @@ const register = async (req, res) => {
                         4. bug 1004
     */
     try {
-        const existingUser = await User.findOne({
+        const existingUser = await Users.findOne({
             where: {
                 name: account
             }
@@ -155,7 +155,7 @@ const register = async (req, res) => {
             const uniqueCode = new Date().getTime().toString().substr(-6);
 
             // 使用 Sequelize 创建用户记录
-            const newUser = await User.create({
+            const newUser = await Users.create({
                 name: account, // 假设数据库中的字段名为 name
                 pass: md5(password), // 假设数据库中的字段名为 pass
                 code: uniqueCode
@@ -181,7 +181,7 @@ const getUserInfo = async (req, res) => {
     // console.log(req.query);
     let { UserId } = req.query;
     try {
-        const UserInfo = await User.findOne({
+        const UserInfo = await Users.findOne({
             where: {
                 id: UserId
             }
@@ -246,7 +246,7 @@ const updateUserInfo = async (req, res) => {
     }
 
     if (field == 'name') {
-        const existing = await User.findOne({ where: { [field]: value } });
+        const existing = await Users.findOne({ where: { [field]: value } });
         if (existing) {
             return res.json({
                 status: 1003,
@@ -255,7 +255,7 @@ const updateUserInfo = async (req, res) => {
         }
     }
 
-    await User.update(
+    await Users.update(
         {
             [field]: value
         },
@@ -263,7 +263,7 @@ const updateUserInfo = async (req, res) => {
     ).then((up) => {
         console.log('updateSuccess', up);
     });
-    const data = await User.findOne({ where: { id: userId } });
+    const data = await Users.findOne({ where: { id: userId } });
     // console.log(data);
     return res.json({
         status: 200,
@@ -272,6 +272,7 @@ const updateUserInfo = async (req, res) => {
     });
 };
 
+// 修改密码
 const updateUserPwd = async (req, res) => {
     const { oldPwd, newPwd, userId } = req.body;
     // console.log(req.body);
@@ -288,7 +289,7 @@ const updateUserPwd = async (req, res) => {
             msg: 'Token 无效'
         });
     }
-    const existingUser = await User.findOne({ where: { id: userId } });
+    const existingUser = await Users.findOne({ where: { id: userId } });
     // console.log(existingUser);
 
     if (existingUser) {
@@ -310,7 +311,7 @@ const updateUserPwd = async (req, res) => {
             }
             // console.log(md5(oldPwd));
             // console.log(existingUser.dataValues.pass);
-            User.update(
+            Users.update(
                 {
                     pass: md5(newPwd)
                 },
@@ -326,58 +327,112 @@ const updateUserPwd = async (req, res) => {
     }
 };
 
+// 获取指定用户列表
 const preFetchUser = async (req, res) => {
-    try {
-        const { optionType, value, pageSize = 6, pagenum = 1 } = req.query;
-        const limitValue = parseInt(pageSize, 10);
-        // console.log(req.query);
+    // try {
+    const { optionType, value, pageSize = 6, pagenum = 1 } = req.query;
+    const limitValue = parseInt(pageSize, 10);
+    // console.log(req.query);
 
-        if (parseToken(req.headers.authorization) == null) {
-            return res.json({
-                status: 1006,
-                data: [],
-                msg: 'Token 已过期'
-            });
-        } else if (parseToken(req.headers.authorization) == 'errToken') {
-            return res.json({
-                status: 1006,
-                data: [],
-                msg: 'Token 无效'
-            });
-        }
-        // offset 从哪里开始找 pagenum=1 第一页 从0开始找 (pagenum-1)*pageSize=0
-        // limit 限制每页显示的数据
-        const existingUser = await User.findAndCountAll({
-            where: {
-                [optionType]: value
-            },
-            offset: (pagenum - 1) * limitValue,
-            limit: limitValue
-        });
-        // console.log(existingUser);
-        if (existingUser) {
-            res.json({
-                status: 200,
-                data: existingUser,
-                pagination: {
-                    currentPage: pagenum,
-                    pageSize: pageSize,
-
-                    // 一共有多少条记录
-                    total: existingUser.count
-                },
-                msg: 'fetch User success'
-            });
-        }
-    } catch (error) {
-        console.error(error);
-        res.json({
-            status: 500,
+    if (parseToken(req.headers.authorization) == null) {
+        return res.json({
+            status: 1006,
             data: [],
-            msg: 'Internal Server Error'
+            msg: 'Token 已过期'
+        });
+    } else if (parseToken(req.headers.authorization) == 'errToken') {
+        return res.json({
+            status: 1006,
+            data: [],
+            msg: 'Token 无效'
         });
     }
+    // offset 从哪里开始找 pagenum=1 第一页 从0开始找 (pagenum-1)*pageSize=0
+    // limit 限制每页显示的数据
+    const existingUser = await Users.findAndCountAll({
+        where: {
+            [optionType]: value
+        },
+        offset: (pagenum - 1) * limitValue,
+        limit: limitValue
+    });
+    // console.log(existingUser);
+    if (existingUser) {
+        res.json({
+            status: 200,
+            data: existingUser,
+            pagination: {
+                currentPage: pagenum,
+                pageSize: pageSize,
+
+                // 一共有多少条记录
+                total: existingUser.count
+            },
+            msg: 'fetch User success'
+        });
+    }
+    // } catch (error) {
+    //     console.error(error);
+    //     res.json({
+    //         status: 500,
+    //         data: [],
+    //         msg: 'Internal Server Error'
+    //     });
+    // }
 };
+
+const addNewFenzu = async (req, res) => {
+    console.log(req.body);
+    const { id, newFenzu } = req.body;
+    const userInfo = await Users.findOne({ where: { id: [id] } });
+    const friendFenzu = userInfo.friendFenzu;
+    // console.log(userInfo);
+    // console.log(friendFenzu);
+    const friendFenzuKeys = Object.keys(friendFenzu);
+    console.log(friendFenzuKeys);
+    const newFriendFenzu = Object.assign({}, { [newFenzu]: [] }, friendFenzu);
+    await Users.update(
+        {
+            friendFenzu: newFriendFenzu
+        },
+        { where: { id: [id] } }
+    );
+    const newUserInfo = await Users.findOne({ where: { id: [id] } });
+    console.log(newUserInfo.friendFenzu);
+
+    res.json({
+        status: 200,
+        data: newUserInfo,
+        msg: 'addNewFenzu success'
+    });
+};
+
+const modifyFriendFenzu = async (req, res) => {
+    console.log(req.body);
+    const { friendFenzu, id } = req.body;
+    console.log(friendFenzu);
+    console.log(id);
+    await Users.update({ friendFenzu: friendFenzu }, { where: { id: [id] } });
+    const UserInfo = await Users.findOne({
+        where: {
+            id: [id]
+        }
+    });
+    console.log('UserInfo', UserInfo);
+
+    res.json({
+        status: 200,
+        data: UserInfo,
+        msg: 'modify success'
+    });
+};
+
+// const deleteUserInFenzu = async (data) => {
+//     console.log(data);
+//     const { userM, userY } = data;
+//     // await Users.
+// };
+
 module.exports = {
     login,
     getCVCode,
@@ -385,5 +440,8 @@ module.exports = {
     getUserInfo,
     updateUserInfo,
     updateUserPwd,
-    preFetchUser
+    preFetchUser,
+    addNewFenzu,
+    modifyFriendFenzu
+    // deleteUserInFenzu
 };

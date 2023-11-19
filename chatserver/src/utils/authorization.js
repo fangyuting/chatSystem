@@ -38,6 +38,7 @@ module.exports = {
             }
             // jwt.verify(token, SECRET_KEY);
         } catch (err) {
+            console.log('344', err);
             return res.json({
                 status: 1006,
                 data: err,
@@ -61,7 +62,7 @@ module.exports = {
             }
             // 处理其他可能的异常，例如 Token 无效等情况
             console.error(err);
-            return 'errToken'; // 返回 null 表示解析失败
+            return 'errToken'; // 返回 null 表示解析失败 这里别删 判断token是否过期的时候会用
         }
     }
 };

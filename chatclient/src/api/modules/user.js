@@ -26,10 +26,27 @@ export default {
     updateUserPwd(data) {
         return request.post(`${API}/user/updateUserPwd`, data);
     },
+    // 获取指定用户列表
     preFetchUser(data) {
         let { optionType, value, pageSize, pagenum } = data;
         return request.get(
             `${API}/user/preFetchUser?optionType=${optionType}&value=${value}&pageSize=${pageSize}&pagenum=${pagenum}`
         );
+    },
+    // 添加新的分组
+    addNewFenzu(data) {
+        return request.post(`${API}/user/addNewFenzu`, data);
+    },
+
+    // 切换分组
+    modifyFriendFenzu(data) {
+        const config = {
+            headers: {
+                'Content-Type': 'application/json' // 设置Content-Type为application/json
+            }
+        };
+
+        return request.post(`${API}/user/modifyFriendFenzu`, data, config);
+        // return request.post(`${API}/user/modifyFriendFenzu`, data);
     }
 };

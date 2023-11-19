@@ -1,0 +1,58 @@
+{
+  "id": "4180505",
+  "name": "shirleyproject",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "12753044",
+      "name": "添加图片",
+      "font_class": "tianjiatupian_huaban",
+      "unicode": "e62c",
+      "unicode_decimal": 58924
+    },
+    {
+      "icon_id": "7008927",
+      "name": "emoji",
+      "font_class": "emoji",
+      "unicode": "e6f6",
+      "unicode_decimal": 59126
+    },
+    {
+      "icon_id": "145431",
+      "name": "icon-qunzu",
+      "font_class": "qunzu",
+      "unicode": "e628",
+      "unicode_decimal": 58920
+    },
+    {
+      "icon_id": "37964680",
+      "name": "icon-pinglun-fill",
+      "font_class": "pinglun-copy",
+      "unicode": "e6be",
+      "unicode_decimal": 59070
+    },
+    {
+      "icon_id": "777843",
+      "name": "icon-dianzan",
+      "font_class": "icon",
+      "unicode": "e651",
+      "unicode_decimal": 58961
+    },
+    {
+      "icon_id": "902050",
+      "name": "icon-pinglun",
+      "font_class": "pinglun",
+      "unicode": "e63a",
+      "unicode_decimal": 58938
+    },
+    {
+      "icon_id": "37964657",
+      "name": "icon-dianzan-fill",
+      "font_class": "icon-copy",
+      "unicode": "e6bd",
+      "unicode_decimal": 59069
+    }
+  ]
+}

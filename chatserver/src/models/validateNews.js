@@ -13,15 +13,41 @@ const validateNews = sequelize.define('validatenews', {
         defaultValue: DataTypes.UUIDV1,
         primaryKey: true
     },
-    reveiverId: { type: Sequelize.STRING, unique: true }, // 接收者ID
-    roomid: { type: Sequelize.STRING, unique: true }, // 群聊ID
-    senderAvatar: { type: Sequelize.STRING, unique: true }, // 发送者头像
-    senderId: { type: Sequelize.STRING, unique: true }, // 发送者ID
-    senderNickname: { type: Sequelize.STRING, unique: true }, // 发送者昵称
-    senderName: { type: Sequelize.STRING, unique: true }, // 发送者账号
-    status: { type: Sequelize.STRING, unique: true }, // 0/1/2 未处理/同意/不同意
-    timer: { type: Sequelize.STRING, unique: true }, // 消息发送时间
-    validateType: { type: Sequelize.STRING, unique: true } // 0/1 好友/群聊
+    additionMessage: { type: DataTypes.STRING, defaultValue: '0' }, // 附加信息
+    reveiverId: {
+        type: DataTypes.STRING,
+        defaultValue: '0',
+        references: {
+            model: 'user', // 假设你的用户模型被命名为 'users'
+            key: 'id'
+        }
+    }, // 接收者ID
+    groupId: {
+        type: DataTypes.STRING,
+        defaultValue: '0',
+        references: {
+            model: 'Group', // 假设你的用户模型被命名为 'users'
+            key: 'id'
+        }
+    }, // 群聊ID
+    roomid: { type: DataTypes.STRING, defaultValue: '' }, // 群聊ID
+    senderAvatar: { type: DataTypes.STRING, defaultValue: '0' }, // 发送者头像
+    senderId: {
+        type: DataTypes.STRING,
+        defaultValue: '0',
+        references: {
+            model: 'user', // 假设你的用户模型被命名为 'users'
+            key: 'id'
+        }
+    }, // 发送者ID
+    senderNickname: { type: DataTypes.STRING, defaultValue: '0' }, // 发送者昵称
+    senderName: { type: DataTypes.STRING, defaultValue: '0' }, // 发送者账号
+    status: { type: DataTypes.STRING, defaultValue: '0' }, // 0/1/2 未处理/同意/不同意
+    timer: {
+        type: DataTypes.DATE,
+        defaultValue: Date.now()
+    }, // 消息发送时间
+    validateType: { type: DataTypes.STRING, defaultValue: '0' } // 0/1 好友/群聊
 });
 
 sequelize.sync();

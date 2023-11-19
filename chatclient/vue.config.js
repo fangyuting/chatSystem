@@ -24,5 +24,9 @@ module.exports = defineConfig({
                 // }
             }
         }
-    }
+    },
+    productionSourceMap: false, // 是否生成生产环境的 source map
+    outputDir: 'dist', // 输出目录，默认是 'dist'
+    assetsDir: 'static', // 静态资源目录 (js, css, img, fonts)
+    publicPath: '/' // 部署应用包时的基本 URL
 });

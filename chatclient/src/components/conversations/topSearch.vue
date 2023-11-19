@@ -1,7 +1,7 @@
 <template>
     <div class="topsearch">
         <div class="header">
-            <el-input v-model="search" placeholder="请输入内容" class="normal-input"></el-input>
+            <el-input v-model="search" placeholder="搜索" class="normal-input"></el-input>
         </div>
         <transition name="slide-down"></transition>
     </div>
@@ -20,10 +20,11 @@
 
 <style lang="scss" scoped>
     .topsearch {
-        width: 100%;
-        margin-top: 20px;
+        /* width: 100%; */
+        /* margin-top: 20px; */
+        margin: 0 5px 10px 5px;
         .normal-input {
-            width: 90%;
+            width: 100%;
         }
     }
 </style>

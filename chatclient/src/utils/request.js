@@ -8,7 +8,7 @@ import store from '@/store';
 import nprogress from 'nprogress'; // start: 进度条开始 end: 进度条结束
 import 'nprogress/nprogress.css';
 // 创建全局 axios 实例 requests 用于发送网络请求
-const requests = axios.create({
+let requests = axios.create({
     // 发请求时都带上 /api
     // baseURL:'/api'
     // 5秒之内无反应则自动请求失败
@@ -61,18 +61,21 @@ requests.interceptors.response.use(
     (res) => {
         // console.log('看看现在什么状态', res.data.status);
         // 处理不同状态码的响应
-        if (res.data.status === 1000) {
+        if (res.data.status === 1000 || res.status === 1000) {
             setCookie(res.data.token);
         }
-        if (res.data.status === 2002) {
+        if (res.data.status === 2002 || res.status === 2002) {
             // 未登录
             Message({
                 message: '请先登录',
                 type: 'warning',
                 duration: 3000
             });
-            router.push('/chatLogin');
-        } else if (res.data.status === 2003) {
+            if (router.currentRoute.path !== '/chatLogin') {
+                // router.push(targetRoute);
+                router.push('/chatLogin');
+            }
+        } else if (res.data.status === 2003 || res.status === 2003) {
             Message({
                 message: '服务端错误,请稍后重试',
                 type: 'error',
@@ -80,7 +83,7 @@ requests.interceptors.response.use(
             });
         }
         // 1006 账户冻结
-        else if (res.data.status === 1006) {
+        else if (res.data.status === 1006 || res.status === 1006) {
             Message({
                 message: '登录过期',
                 type: 'warning',
@@ -88,14 +91,20 @@ requests.interceptors.response.use(
             });
             // 清除cookie 清除缓存中的 userInfo 和 isLogin 跳转到 chatLogin 页面 确保输入账号密码才能再次进入 而不是修改ip就行
             removeCookie();
-            router.push('/chatLogin');
-            store.dispatch('user/LOGOUT');
+            console.log('router.currentRoute.path', router.currentRoute.path);
+            if (router.currentRoute.path !== '/chatLogin') {
+                // router.push(targetRoute);
+                router.push('/chatLogin');
+            }
+            // store.dispatch('user/LOGOUT');
         } else if (res.data.status === 1002 && res.data.data === 'overdue') {
             Message({
                 message: '验证码过期！',
                 type: 'warning',
                 duration: 3000
             });
+        } else {
+            console.log('wowow');
         }
         // 进度条结束
         nprogress.done();
@@ -111,7 +120,7 @@ requests.interceptors.response.use(
             duration: 5000
         });
         // 失败的回调函数
-        return Promise.reject(new Error('failed'));
+        return Promise.reject(error);
     }
 );
 

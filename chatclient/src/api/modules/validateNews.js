@@ -8,4 +8,9 @@ export default {
     //         `${API}/validateNews/sendValidateMessage?senderId=${senderId}&senderNickname=${senderNickname}&senderName=${senderName}&senderAvatar=${senderAvatar}&receiverId=${receiverId}`
     //     );
     // }
+
+    getMyValidateNews(data) {
+        const { reveiverId } = data;
+        return request.get(`${API}/validate/getMyValidateNews?reveiverId=${reveiverId}`);
+    }
 };

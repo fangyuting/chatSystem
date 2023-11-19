@@ -111,3 +111,32 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
     ```
         发请求 验token 原密码校验 新密码校验 修改数据库
     ```
+
+#### 登录页 views/chatLogin
+
+#### 首页 views/chatHome
+
+#### 侧边栏 views/sidebar
+
+```
+    侧边栏内容
+            首页 views/chatHome
+                组件
+                    components/conversation     中间栏 消息列表栏
+                        组件
+                            components/topSearch    搜索
+                            components/todo     日程
+                                this.$router.push
+                                    views/schedule
+                            components/conversationList     消息列表
+                                组件
+                                    components/conversationList/recentConversation   最近
+                                    components/conversationList/fenzuConversation    分组
+                                    components/conversationList/groupConversation    群
+
+            添加好友 views/Add
+                组件
+                    components/Add/validateNews 好友验证申请列表
+            空间 views/MZone
+            设置 views/Setting
+```

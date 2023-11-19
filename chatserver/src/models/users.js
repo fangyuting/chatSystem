@@ -6,7 +6,7 @@ const sequelize = new Sequelize('chat', 'root', '123456', {
     dialect: 'mysql'
 });
 
-const User = sequelize.define(
+const Users = sequelize.define(
     'users',
     {
         id: {
@@ -39,12 +39,12 @@ const User = sequelize.define(
         wallpaper: { type: Sequelize.STRING, defaultValue: '/img/wallpaper.jpg' }, // 聊天壁纸
         signUpTime: { type: Sequelize.DATE, defaultValue: Date.now() }, // 注册时间
         lastLoginTime: { type: Sequelize.DATE, defaultValue: Date.now() }, // 最后一次登录
-        conversationsList: { type: Sequelize.ARRAY(Sequelize.JSON), defaultValue: [] }, // 会话列表 * name 会话名称 * photo 会话头像 * id 会话id * type 会话类型 group/ friend
+        conversationsList: { type: DataTypes.ARRAY(Sequelize.JSON), defaultValue: [] }, // 会话列表 * name 会话名称 * photo 会话头像 * id 会话id * type 会话类型 group/ friend
         cover: {
-            type: Sequelize.ARRAY(Sequelize.STRING),
+            type: DataTypes.ARRAY(Sequelize.STRING),
             defaultValue: ['/img/cover.jpg', '/img/cover1.jpg']
         }, // 封面展示
-        emoji: { type: Sequelize.ARRAY(Sequelize.JSON), defaultValue: [] }, // 表情包
+        emoji: { type: DataTypes.ARRAY(Sequelize.JSON), defaultValue: [] }, // 表情包
         status: { type: Sequelize.INTEGER, defaultValue: 0 }, // 0：正常可用，1：冻结不可用，2：注销不可用
         age: { type: Sequelize.STRING, defaultValue: '18' },
         loginSetting: {
@@ -56,6 +56,7 @@ const User = sequelize.define(
             type: Sequelize.JSON,
             defaultValue: { 我的好友: [] }
         },
+
         /**
          * {
          *    id: 'C罗',
@@ -76,4 +77,4 @@ const User = sequelize.define(
 
 sequelize.sync();
 
-module.exports = { User };
+module.exports = { Users };

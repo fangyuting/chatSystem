@@ -4,7 +4,7 @@
         <el-row class="main_login">
             <!-- 右边图片部分 -->
             <el-col :span="12" class="left_image">
-                <img src="../../static/image/登录页.png" alt="" />
+                <img src="../../static/image/Illustration.png" alt="" />
             </el-col>
             <!-- 左边登录或注册部分 -->
             <el-col :span="12" class="right_login">
@@ -174,21 +174,23 @@
 
                 this.cvCoding = true;
                 api.user.getCVCode().then((res) => {
-                    const { data, status, timestamp } = res;
-                    // console.log('cvCoderes', res);
-                    // console.log('data.data', data);
-                    this.cvCode = data;
-                    // console.log(this.cvCode);
+                    if (res.status == 200) {
+                        const { data, status, timestamp } = res;
+                        // console.log('cvCoderes', res);
+                        // console.log('data.data', data);
+                        this.cvCode = data;
+                        // console.log(this.cvCode);
 
-                    this.cvCoding = true;
-                    this.currentInfo.cvCodeTimestamp = timestamp;
+                        this.cvCoding = true;
+                        this.currentInfo.cvCodeTimestamp = timestamp;
 
-                    this.$nextTick(() => {
-                        const currCanvas = this.$refs.currentCanvas;
-                        createCanvas(this.cvCode, currCanvas, canvasImg, () => {
-                            this.coding = false;
+                        this.$nextTick(() => {
+                            const currCanvas = this.$refs.currentCanvas;
+                            createCanvas(this.cvCode, currCanvas, canvasImg, () => {
+                                this.coding = false;
+                            });
                         });
-                    });
+                    }
                 });
             },
 
@@ -214,9 +216,9 @@
                         if (valid) {
                             api.user.login(this.currentInfo).then((res) => {
                                 let { status, data, msg } = res;
-                                console.log('loginres', res);
-                                console.log('loginstatus', status);
-                                console.log('loginmsg', msg);
+                                // console.log('loginres', res);
+                                // console.log('loginstatus', status);
+                                // console.log('loginmsg', msg);
                                 if (status === 1001) {
                                     Message({
                                         message: '账号/密码错误',
@@ -263,6 +265,7 @@
                                 }
 
                                 if (status === 1000) {
+                                    this.$store.dispatch('user/LOGIN', data);
                                     this.$notify({
                                         title: `Hello ${this.currentInfo.account}`,
                                         message: '登录成功 ! ! !',
@@ -274,8 +277,6 @@
                                     //     'account',
                                     //     this.currentInfo.account
                                     // );
-
-                                    this.$store.dispatch('user/LOGIN', data);
 
                                     const redirect = this.$router.currentRoute.query.redirect;
                                     // console.log(redirect);
@@ -390,17 +391,21 @@
 
 <style lang="scss" scoped>
     .login {
-        min-width: 62.5rem; /* 设置最小宽度,防止因缩放导致内容挤压 */
+        min-width: 75rem; /* 设置最小宽度,防止因缩放导致内容挤压 */
         width: 100vw;
         height: 100vh;
         .main_login {
             display: flex;
             flex-direction: row;
-        }
-        img {
-            width: 100%;
             height: 100vh;
+            .left_image {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                justify-content: center;
+            }
         }
+
         .right_login {
             display: flex;
             flex-direction: column;

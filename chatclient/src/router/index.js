@@ -28,7 +28,7 @@ const router = new VueRouter({
         {
             path: '/chat',
             name: 'Chat',
-            component: () => import('@/views/chat'),
+            component: () => import('@/views/Sidebar'),
             redirect: '/chat/chatHome',
             meta: {
                 requiresAuth: true,
@@ -72,19 +72,28 @@ const router = new VueRouter({
                 {
                     path: 'mzone',
                     name: 'MZone',
-                    component: () => import('@/views/MZone/index'),
+                    component: () => import('@/views/MZone'),
                     meta: {
                         requiresAuth: true
                     }
                 },
                 {
-                    path: 'editor',
-                    name: 'Editor',
-                    component: () => import('@/views/MZone/editorBlog'),
+                    path: 'addBlog',
+                    name: 'addBlog',
+                    component: () => import('@/components/mzone/addBlog'),
                     meta: {
                         requiresAuth: true
                     }
                 },
+                {
+                    path: 'blog/:id',
+                    name: 'blogDetail',
+                    component: () => import('@/components/mzone/blogDetail'),
+                    meta: {
+                        requiresAuth: true
+                    }
+                },
+
                 {
                     path: 'schedule',
                     name: 'Schedule',

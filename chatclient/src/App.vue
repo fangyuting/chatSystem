@@ -17,7 +17,7 @@
         },
         sockets: {
             disconnect() {
-                alert('Socket 断开');
+                // alert('Socket 断开');
             },
 
             connect() {
@@ -26,6 +26,9 @@
             },
             linkSuccess(val) {
                 console.log('linkSuccess :>>', val);
+            },
+            hello(val) {
+                console.log('服务器收到了hello', val);
             }
         },
         mounted() {
